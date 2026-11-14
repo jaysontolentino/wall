@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Wall",
-  description: "Wall, built with Next.js, Tailwind CSS, shadcn/ui, and Supabase.",
+  description: "A little space to share a message, a photo, and a moment with friends.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
