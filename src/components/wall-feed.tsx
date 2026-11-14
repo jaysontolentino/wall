@@ -5,6 +5,7 @@ import { ImagePlus, LoaderCircle, X } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Avatar } from "@/components/avatar";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { MAX_MESSAGE_LENGTH, PHOTO_BUCKET, PHOTO_TYPES, messageLength, profile, samplePosts, timeAgo, validatePhoto, type Post } from "@/lib/wall";
@@ -143,8 +144,12 @@ export function WallFeed() {
   return (
     <section className="wall-content" aria-label={`${profile.name}'s wall`}>
       <form className="composer" onSubmit={share}>
-        <fieldset disabled={busy} className="min-w-0 space-y-3">
+        <fieldset disabled={busy} className="composer-fields">
           <legend className="sr-only">Write on the wall</legend>
+          <div className="composer-author">
+            <Avatar name={profile.name} />
+            <div><strong>{profile.name}</strong><span>Share a moment from your day.</span></div>
+          </div>
           <label className="sr-only" htmlFor="message">What&apos;s on your mind?</label>
           <textarea id="message" className="message-input" placeholder="What's on your mind?" value={body} onChange={(event) => setBody(Array.from(event.target.value).slice(0, MAX_MESSAGE_LENGTH).join(""))} aria-describedby="character-count" rows={4} />
           <p id="character-count" className="character-count">{remaining} characters remaining</p>
@@ -157,13 +162,12 @@ export function WallFeed() {
             </div>
           ) : (
             <button type="button" className="upload-area" onClick={() => fileInput.current?.click()}>
-              <ImagePlus size={23} strokeWidth={1.5} aria-hidden="true" />
-              <span>Click to add photo <span className="font-normal">(optional)</span></span>
-              <span className="text-[11px] text-slate-400">JPG, PNG, GIF up to 5 MB</span>
+              <span className="upload-icon"><ImagePlus size={21} strokeWidth={1.7} aria-hidden="true" /></span>
+              <span className="upload-copy"><span>Add a photo <span className="upload-optional">(optional)</span></span><span>JPG, PNG, GIF up to 5 MB</span></span>
             </button>
           )}
-          <div className="flex min-h-9 items-center justify-between gap-4">
-            <span className="text-xs text-slate-500">Write a little. Share a moment.</span>
+          <div className="composer-footer">
+            <span>Write a little. Share a moment.</span>
             <Button type="submit" disabled={busy || (!body.trim() && !photo) || !supabase} className="share-button">
               {busy && <LoaderCircle className="size-3.5 animate-spin" aria-hidden="true" />}
               {busy ? "Sharing…" : "Share"}
@@ -171,26 +175,33 @@ export function WallFeed() {
           </div>
         </fieldset>
         {error && <p role="alert" className="form-error">{error}</p>}
-        <p role="status" className="text-sm text-emerald-700">{notice}</p>
+        <p role="status" className={`share-notice${notice ? " has-notice" : ""}`}>{notice}</p>
       </form>
       {!supabase && <p className="feed-notice">Sample wall · Connect Supabase to share posts.</p>}
       {feedError && <p role="status" className="feed-notice">{feedError}</p>}
       {loading && <p role="status" className="py-3 text-sm text-slate-500">Loading the wall…</p>}
+      <div className="feed-heading"><h2>The wall</h2><span>Newest first</span></div>
       <div aria-label="Wall posts" aria-busy={loading}>
         {posts.map((post) => (
           <article key={post.id} className="wall-post">
+            <Avatar name={post.author_name || profile.name} />
+            <div className="post-content">
             <div className="post-heading">
               <h2>{post.author_name || profile.name}</h2>
               <time dateTime={post.created_at ?? undefined} title={post.created_at ? new Date(post.created_at).toLocaleString() : undefined}>{now ? timeAgo(post.created_at, now) : ""}</time>
             </div>
             {post.body && <p className="post-body">{post.body}</p>}
             {post.photo_url && <Image src={post.photo_url} alt={`Photo shared by ${post.author_name || profile.name}`} width={640} height={480} unoptimized className="post-photo" />}
+            </div>
           </article>
         ))}
         {samplePosts.map((post) => (
           <article key={post.name} className="wall-post">
+            <Avatar name={post.name} />
+            <div className="post-content">
             <div className="post-heading"><h2>{post.name}</h2><span>{post.age}</span></div>
             <p className="post-body">{post.body}</p>
+            </div>
           </article>
         ))}
       </div>

@@ -66,7 +66,7 @@ Upload errors show Supabase's returned error message to help identify the cause.
 
 ## Make it yours
 
-Edit `src/lib/wall.ts` to set your profile name, bio, city, and profile-photo path. Replace `public/profile-placeholder.svg` with your own image, or add `public/profile.jpg` and set `profile.photo` to `/profile.jpg`. Desktop profile photos are deliberately larger than the reference (260–282 pixels wide); the mobile layout keeps the photo next to the profile details.
+Edit `src/lib/wall.ts` to set your profile name, bio, city, and profile-photo path. Replace `public/profile-placeholder.svg` with your own image, or add `public/profile.jpg` and set `profile.photo` to `/profile.jpg`. The desktop layout uses a large framed portrait; mobile keeps a smaller portrait beside the profile details. Your photo is also used for the header, composer, and your posts, with initial avatars for other authors. The wall uses Geist throughout, with shared colors, spacing, and rounded controls.
 
 Edit the sample messages in the same file. Layout styling lives in `src/app/globals.css`. Add shadcn/ui components with `npx shadcn@latest add input dialog`.
 

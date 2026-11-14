@@ -11,7 +11,7 @@ export const PHOTO_TYPES: Record<string, string> = {
 export const profile = {
   name: "Jayson Tolentino",
   photo: "/profile.jpg",
-  bio: "Add a short bio about yourself.",
+  bio: "Full-Stack Software Engineer",
   city: "Pampanga, PH",
 };
 
